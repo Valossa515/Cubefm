@@ -1,5 +1,6 @@
 package com.felipe.cubefm;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +13,26 @@ import com.felipe.cubefm.domain.Cidade;
 import com.felipe.cubefm.domain.Cliente;
 import com.felipe.cubefm.domain.Endereco;
 import com.felipe.cubefm.domain.Estado;
+import com.felipe.cubefm.domain.Pagamento;
+import com.felipe.cubefm.domain.PagamentoComBoleto;
+import com.felipe.cubefm.domain.PagamentoComCartao;
+import com.felipe.cubefm.domain.Pedido;
 import com.felipe.cubefm.domain.Produto;
+import com.felipe.cubefm.domain.enums.EstadoPagamento;
 import com.felipe.cubefm.domain.enums.TipoCliente;
 import com.felipe.cubefm.repositories.CategoriaRepository;
 import com.felipe.cubefm.repositories.CidadeRepository;
 import com.felipe.cubefm.repositories.ClienteRepository;
 import com.felipe.cubefm.repositories.EnderecoRepository;
 import com.felipe.cubefm.repositories.EstadoRepository;
+import com.felipe.cubefm.repositories.PagamentoRepository;
+import com.felipe.cubefm.repositories.PedidoRepository;
 import com.felipe.cubefm.repositories.ProdutoRepository;
 import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 @SpringBootApplication
-public class CubefmApplication implements CommandLineRunner{
-	
+public class CubefmApplication implements CommandLineRunner {
+
 	@Autowired
 	private CategoriaRepository categoriaRpository;
 	@Autowired
@@ -37,7 +45,11 @@ public class CubefmApplication implements CommandLineRunner{
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private EnderecoRepository enderecoRepository;
-	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(CubefmApplication.class, args);
 	}
@@ -46,41 +58,56 @@ public class CubefmApplication implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		Categoria cat1 = new Categoria(null, "Pluzzle");
 		Categoria cat2 = new Categoria(null, "Card Game");
-		
+
 		Produto p1 = new Produto(null, "Cubo Mágico 3x3x3", 45.00);
 		Produto p2 = new Produto(null, "Pacote de booster Pokémon - Sol & Lua 12", 7.00);
 		Produto p3 = new Produto(null, "Cubo Mágico 4x4x4", 55.00);
-		
-		cat1.getProdutos().addAll(Arrays.asList(p1,p3));
+
+		cat1.getProdutos().addAll(Arrays.asList(p1, p3));
 		cat2.getProdutos().addAll(Arrays.asList(p2));
-		
+
 		p1.getCategorias().addAll(Arrays.asList(cat1));
 		p2.getCategorias().addAll(Arrays.asList(cat2));
 		p3.getCategorias().addAll(Arrays.asList(cat1));
-				
+
 		categoriaRpository.saveAll(Arrays.asList(cat1, cat2));
-		produtoRepository.saveAll(Arrays.asList(p1,p2,p3));
-		
+		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
+
 		Estado est1 = new Estado(null, "Minas Gerais");
 		Estado est2 = new Estado(null, "São Paulo");
-		
-		Cidade c1 = new Cidade(null, "Uberlãndia",est1);
+
+		Cidade c1 = new Cidade(null, "Uberlãndia", est1);
 		Cidade c2 = new Cidade(null, "São Caetano do Sul", est2);
 		Cidade c3 = new Cidade(null, "Campinas", est2);
-		
+
 		est1.getCidades().addAll(Arrays.asList(c1));
-		est2.getCidades().addAll(Arrays.asList(c2,c3));
-		
+		est2.getCidades().addAll(Arrays.asList(c2, c3));
+
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
-		cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
-		
-		Cliente cli1 = new Cliente(null, "Felipe Martins", "fe.mmo515@gmail.com", "442.446.478-48", TipoCliente.PESSOAFISICA);
+		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
+
+		Cliente cli1 = new Cliente(null, "Felipe Martins", "fe.mmo515@gmail.com", "442.446.478-48",
+				TipoCliente.PESSOAFISICA);
 		cli1.getTelefones().addAll(Arrays.asList("(11) 4221-7671", "(11) 9 5432-3543"));
 		Endereco e1 = new Endereco(null, "Rua Perrella", "145", "Apto 11", "Fundação", "09520-660", cli1, c2);
 		Endereco e2 = new Endereco(null, "Rua João Pessoa", "83", " ", "Centro", "09520-100", cli1, c2);
-		cli1.getEnderecos().addAll(Arrays.asList(e1,e2));
-		
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+
 		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(e1,e2));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Pedido ped1 = new Pedido(null, sdf.parse("13/09/2019 17:13"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("13/09/2019 17:21"), cli1, e2);
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2019 00:00"),
+				null);
+		ped2.setPagamento(pagto2);
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
+
 	}
 }
