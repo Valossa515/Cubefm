@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.felipe.cubefm.domain.Categoria;
 import com.felipe.cubefm.domain.Cidade;
+import com.felipe.cubefm.domain.Cliente;
+import com.felipe.cubefm.domain.Endereco;
 import com.felipe.cubefm.domain.Estado;
 import com.felipe.cubefm.domain.Produto;
+import com.felipe.cubefm.domain.enums.TipoCliente;
 import com.felipe.cubefm.repositories.CategoriaRepository;
 import com.felipe.cubefm.repositories.CidadeRepository;
+import com.felipe.cubefm.repositories.ClienteRepository;
+import com.felipe.cubefm.repositories.EnderecoRepository;
 import com.felipe.cubefm.repositories.EstadoRepository;
 import com.felipe.cubefm.repositories.ProdutoRepository;
 import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
@@ -28,6 +33,10 @@ public class CubefmApplication implements CommandLineRunner{
 	private CidadeRepository cidadeRepository;
 	@Autowired
 	private EstadoRepository estadoRepository;
+	@Autowired
+	private ClienteRepository clienteRepository;
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CubefmApplication.class, args);
@@ -64,5 +73,14 @@ public class CubefmApplication implements CommandLineRunner{
 		
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
+		
+		Cliente cli1 = new Cliente(null, "Felipe Martins", "fe.mmo515@gmail.com", "442.446.478-48", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().addAll(Arrays.asList("(11) 4221-7671", "(11) 9 5432-3543"));
+		Endereco e1 = new Endereco(null, "Rua Perrella", "145", "Apto 11", "Fundação", "09520-660", cli1, c2);
+		Endereco e2 = new Endereco(null, "Rua João Pessoa", "83", " ", "Centro", "09520-100", cli1, c2);
+		cli1.getEnderecos().addAll(Arrays.asList(e1,e2));
+		
+		clienteRepository.saveAll(Arrays.asList(cli1));
+		enderecoRepository.saveAll(Arrays.asList(e1,e2));
 	}
 }
