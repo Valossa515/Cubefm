@@ -1,8 +1,6 @@
 package com.felipe.cubefm.domain;
 
 import java.io.Serializable;
-
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -35,7 +32,7 @@ public class Produto implements Serializable
 		joinColumns = @JoinColumn(name = "produto_id"),
 		inverseJoinColumns = @JoinColumn(name = "categoria_id")
 	)
-	@JsonBackReference
+	@JsonIgnore
 	private List<Categoria> categorias = new ArrayList<>();
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.produto")

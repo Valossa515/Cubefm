@@ -2,14 +2,13 @@ package com.felipe.cubefm.domain;
 
 import java.io.Serializable;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Cidade implements Serializable
@@ -23,7 +22,6 @@ public class Cidade implements Serializable
 	
 	@ManyToOne
 	@JoinColumn(name = "estado_id")
-	@JsonManagedReference
 	private Estado estado;
 	
 	public Cidade()

@@ -1,6 +1,7 @@
 package com.felipe.cubefm.domain;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Estado implements Serializable
@@ -22,7 +23,7 @@ public class Estado implements Serializable
 	private String nome;
 	
 	@OneToMany(mappedBy = "estado")
-	@JsonBackReference
+	@JsonIgnore
 	private List<Cidade> cidades = new ArrayList<>();
 	
 	public Estado()
