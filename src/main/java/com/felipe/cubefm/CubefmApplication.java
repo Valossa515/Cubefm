@@ -13,6 +13,7 @@ import com.felipe.cubefm.domain.Cidade;
 import com.felipe.cubefm.domain.Cliente;
 import com.felipe.cubefm.domain.Endereco;
 import com.felipe.cubefm.domain.Estado;
+import com.felipe.cubefm.domain.ItemPedido;
 import com.felipe.cubefm.domain.Pagamento;
 import com.felipe.cubefm.domain.PagamentoComBoleto;
 import com.felipe.cubefm.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.felipe.cubefm.repositories.CidadeRepository;
 import com.felipe.cubefm.repositories.ClienteRepository;
 import com.felipe.cubefm.repositories.EnderecoRepository;
 import com.felipe.cubefm.repositories.EstadoRepository;
+import com.felipe.cubefm.repositories.ItemPedidoRepository;
 import com.felipe.cubefm.repositories.PagamentoRepository;
 import com.felipe.cubefm.repositories.PedidoRepository;
 import com.felipe.cubefm.repositories.ProdutoRepository;
@@ -49,7 +51,8 @@ public class CubefmApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
-
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(CubefmApplication.class, args);
 	}
@@ -108,6 +111,13 @@ public class CubefmApplication implements CommandLineRunner {
 		
 		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
-
+		
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 45.00);
+		ItemPedido ip2 = new ItemPedido(ped2, p3, 0.00, 1, 55.00);
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip2));
+		
+		itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2));
 	}
 }
