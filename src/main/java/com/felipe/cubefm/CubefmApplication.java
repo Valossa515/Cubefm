@@ -2,12 +2,10 @@ package com.felipe.cubefm;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import com.felipe.cubefm.domain.Categoria;
 import com.felipe.cubefm.domain.Cidade;
 import com.felipe.cubefm.domain.Cliente;
@@ -30,7 +28,6 @@ import com.felipe.cubefm.repositories.ItemPedidoRepository;
 import com.felipe.cubefm.repositories.PagamentoRepository;
 import com.felipe.cubefm.repositories.PedidoRepository;
 import com.felipe.cubefm.repositories.ProdutoRepository;
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 @SpringBootApplication
 public class CubefmApplication implements CommandLineRunner {
@@ -59,8 +56,13 @@ public class CubefmApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Categoria cat1 = new Categoria(null, "Pluzzle");
+		Categoria cat1 = new Categoria(null, "Pluzzles");
 		Categoria cat2 = new Categoria(null, "Card Game");
+		Categoria cat3 = new Categoria(null, "Tabuleiro");
+		Categoria cat4 = new Categoria(null, "Livros");
+		Categoria cat5 = new Categoria(null, "Jogos Eletônicos");
+		Categoria cat6 = new Categoria(null, "HQ's");
+		Categoria cat7 = new Categoria(null, "Quadrinhos");
 
 		Produto p1 = new Produto(null, "Cubo Mágico 3x3x3", 45.00);
 		Produto p2 = new Produto(null, "Pacote de booster Pokémon - Sol & Lua 12", 7.00);
@@ -73,7 +75,7 @@ public class CubefmApplication implements CommandLineRunner {
 		p2.getCategorias().addAll(Arrays.asList(cat2));
 		p3.getCategorias().addAll(Arrays.asList(cat1));
 
-		categoriaRpository.saveAll(Arrays.asList(cat1, cat2));
+		categoriaRpository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7));
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
 
 		Estado est1 = new Estado(null, "Minas Gerais");
