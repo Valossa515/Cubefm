@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.felipe.cubefm.domain.Categoria;
 import com.felipe.cubefm.domain.Pedido;
-import com.felipe.cubefm.dto.CategoriaDTO;
 import com.felipe.cubefm.services.PedidoService;
 
 @RestController
