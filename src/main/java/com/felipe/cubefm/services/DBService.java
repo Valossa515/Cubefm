@@ -20,6 +20,7 @@ import com.felipe.cubefm.domain.PagamentoComCartao;
 import com.felipe.cubefm.domain.Pedido;
 import com.felipe.cubefm.domain.Produto;
 import com.felipe.cubefm.domain.enums.EstadoPagamento;
+import com.felipe.cubefm.domain.enums.Perfil;
 import com.felipe.cubefm.domain.enums.TipoCliente;
 import com.felipe.cubefm.repositories.CategoriaRepository;
 import com.felipe.cubefm.repositories.CidadeRepository;
@@ -93,15 +94,20 @@ public class DBService {
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-		Cliente cli1 = new Cliente(null, "Felipe Martins", "fe.mmo515@gmail.com", "442.446.478-48",
+		Cliente cli1 = new Cliente(null, "Felipe Martins", "fe.mmo515@gmail.com", "44244647848",
 				TipoCliente.PESSOAFISICA, pe.encode("Felipe@515"));
+		Cliente cli2 = new Cliente(null, "Felipe Oliveira", "fe_mmo@hotmail.com", "83162443814",
+				TipoCliente.PESSOAFISICA, pe.encode("Felipe@515"));
+		cli2.addPerfil(Perfil.ADMIN);
 		cli1.getTelefones().addAll(Arrays.asList("(11) 4221-7671", "(11) 9 5432-3543"));
+		cli2.getTelefones().addAll(Arrays.asList("(11) 4221-5877", "(11) 9 9680-3622"));
 		Endereco e1 = new Endereco(null, "Rua Perrella", "145", "Apto 11", "Fundação", "09520-660", cli1, c2);
-		Endereco e2 = new Endereco(null, "Rua João Pessoa", "83", " ", "Centro", "09520-100", cli1, c2);
+		Endereco e2 = new Endereco(null, "Rua João Pessoa", "83", null, "Centro", "09520-100", cli1, c2);
+		Endereco e3 = new Endereco(null, "Rua Perrella", "155", null, "Fundação", "09520-200", cli2, c2);
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
-
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		cli2.getEnderecos().addAll(Arrays.asList(e3));
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Pedido ped1 = new Pedido(null, sdf.parse("13/09/2019 17:13"), cli1, e1);
