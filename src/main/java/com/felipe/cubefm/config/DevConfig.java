@@ -2,6 +2,7 @@ package com.felipe.cubefm.config;
 
 import java.text.ParseException;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.felipe.cubefm.services.DBService;
+import com.felipe.cubefm.services.EmailService;
+import com.felipe.cubefm.services.SmtpEmailService;
+
 
 @Configuration
 @Profile("dev")
@@ -26,5 +30,9 @@ public class DevConfig {
 		}
 		dbService.instantitateTestDataBase();
 		return true;
+	}
+	@Bean
+	public EmailService emailService() {
+		return new SmtpEmailService();
 	}
 }
