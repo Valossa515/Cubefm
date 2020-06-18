@@ -1,10 +1,17 @@
 package com.felipe.cubefm.services;
 
 import java.util.Date;
+
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.felipe.cubefm.domain.Cliente;
 import com.felipe.cubefm.domain.ItemPedido;
 import com.felipe.cubefm.domain.PagamentoComBoleto;
 import com.felipe.cubefm.domain.Pedido;
@@ -12,6 +19,8 @@ import com.felipe.cubefm.domain.enums.EstadoPagamento;
 import com.felipe.cubefm.repositories.ItemPedidoRepository;
 import com.felipe.cubefm.repositories.PagamentoRepository;
 import com.felipe.cubefm.repositories.PedidoRepository;
+import com.felipe.cubefm.security.UserSS;
+import com.felipe.cubefm.services.exceptions.AuthorizationException;
 import com.felipe.cubefm.services.exceptions.ObjectNotFoundException;
 
 
@@ -62,5 +71,14 @@ public class PedidoService
 		itemPedidoRepository.saveAll(obj.getItens());
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
+	}
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente =  clienteService.find(user.getId());
+		return repo.findByCliente(cliente, pageRequest);
 	}
 }
