@@ -32,7 +32,7 @@ public class CategoriaResource
 		Categoria obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto)
 	{
@@ -42,7 +42,7 @@ public class CategoriaResource
 				.buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id)
 	{
@@ -51,7 +51,7 @@ public class CategoriaResource
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
-	@PreAuthorize("hasAnyHole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Integer id)
 	{

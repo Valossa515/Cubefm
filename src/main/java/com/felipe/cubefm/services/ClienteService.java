@@ -1,7 +1,6 @@
 package com.felipe.cubefm.services;
 
 import java.util.List;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.felipe.cubefm.domain.Cidade;
 import com.felipe.cubefm.domain.Cliente;
 import com.felipe.cubefm.domain.Endereco;
+import com.felipe.cubefm.domain.enums.Perfil;
 import com.felipe.cubefm.domain.enums.TipoCliente;
 import com.felipe.cubefm.dto.ClienteDTO;
 import com.felipe.cubefm.dto.ClienteNewDTO;
 import com.felipe.cubefm.repositories.ClienteRepository;
 import com.felipe.cubefm.repositories.EnderecoRepository;
+import com.felipe.cubefm.security.UserSS;
+import com.felipe.cubefm.services.exceptions.AuthorizationException;
 import com.felipe.cubefm.services.exceptions.DataIntegrityException;
 import com.felipe.cubefm.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +38,11 @@ public class ClienteService
 	private BCryptPasswordEncoder pe;
 	
 	public Cliente find(Integer id) {
+		UserSS user = UserService.authenticated();
+		
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
