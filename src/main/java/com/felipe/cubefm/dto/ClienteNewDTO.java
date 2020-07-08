@@ -1,4 +1,4 @@
-package com.felipe.cubefm.dto;
+ package com.felipe.cubefm.dto;
 
 import java.io.Serializable;
 

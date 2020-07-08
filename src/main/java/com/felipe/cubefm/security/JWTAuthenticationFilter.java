@@ -2,6 +2,7 @@ package com.felipe.cubefm.security;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.servlet.FilterChain;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -49,6 +51,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
     protected void successfulAuthentication(HttpServletRequest req,
                                             HttpServletResponse res,
@@ -56,9 +59,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication auth) throws IOException, ServletException {
 	
 		String username = ((UserSS) auth.getPrincipal()).getUsername();
-        String token = jwtUtil.generateToken(username);
+		Collection<GrantedAuthority> perfil = (Collection<GrantedAuthority>) auth.getAuthorities();
+        String token = jwtUtil.generateToken(username,perfil);
         res.addHeader("Authorization", "Bearer " + token);
-        res.addHeader("access-control-expose-headers", "Authorization");
         res.addHeader("access-control-expose-headers", "Authorization");
 	}
 	

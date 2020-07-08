@@ -137,17 +137,18 @@ public class ClienteService
 		newObj.setEmail(obj.getEmail());
 	}
 	
-	public URI uploadProfilePicture(MultipartFile multipartFile)
-	{
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
 		UserSS user = UserService.authenticated();
-		if(user == null)
-		{
+		if (user == null) {
 			throw new AuthorizationException("Acesso negado");
 		}
+		
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);
+		
 		String fileName = prefix + user.getId() + ".jpg";
+		
 		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 	}
 }

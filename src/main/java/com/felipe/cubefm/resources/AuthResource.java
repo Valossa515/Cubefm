@@ -1,10 +1,13 @@
 package com.felipe.cubefm.resources;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,10 +28,12 @@ public class AuthResource {
 	@Autowired
 	private AuthService authService;
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/refresh_token", method = RequestMethod.POST)
 	public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
 		UserSS user = UserService.authenticated();
-		String token = jwtUtil.generateToken(user.getUsername());
+		Collection<GrantedAuthority> perfil = (Collection<GrantedAuthority>) user.getAuthorities();
+		String token = jwtUtil.generateToken(user.getUsername(),perfil);
 		response.addHeader("Authorization", "Bearer " + token);
 		response.addHeader("access-control-expose-headers", "Authorization");
 		return ResponseEntity.noContent().build();
